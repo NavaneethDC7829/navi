@@ -1,0 +1,103 @@
+package gherkin;
+
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+
+public class Createn {
+	@Test
+	public void post() {
+		Response res = RestAssured.given().
+		baseUri("https://www.shoppersstack.com/shopping").
+		body("{\r\n"
+				+ "  \"city\": \"Bangalore\",\r\n"
+				+ "  \"country\": \"India\",\r\n"
+				+ "  \"email\": \"navavna112a@gmail.com\",\r\n"
+				+ "  \"firstName\": \"india\",\r\n"
+				+ "  \"gender\": \"MALE\",\r\n"
+				+ "  \"lastName\": \"pak\",\r\n"
+				+ "  \"password\": \"India@123\",\r\n"
+				+ "  \"phone\": 9123456780,\r\n"
+				+ "  \"state\": \"Karnataka\",\r\n"
+				+ "  \"zoneId\": \"ALPHA\"\r\n"
+				+ "}").
+		contentType("application/json")
+		
+		.when()
+		.post("/shoppers")
+		.then()
+		.statusCode(201)
+		.and()
+		.statusLine("HTTP/1.1 201 ").extract().response();
+		System.out.println(res.asPrettyString());
+		
+	}
+	@Test
+	public void login() {
+		 Response res1 = RestAssured.
+		given().
+		baseUri("https://www.shoppersstack.com/shopping").
+		body("{\r\n"
+				+ "  \"email\": \"navavna112a@gmail.com\",\r\n"
+				+ "  \"password\": \"India@123\",\r\n"
+				+ "  \"role\": \"SHOPPER\"\r\n"
+				+ "}")
+		.contentType("application/json")
+		.when()
+		.post("/users/login")
+		.then()
+		.statusCode(200).extract().response();
+		System.out.println(res1.asPrettyString());
+		
+	}
+	@Test
+	public void get() {
+		 Response res1 = RestAssured.
+		given().
+		baseUri("https://www.shoppersstack.com/shopping").auth().oauth2("eyJzdWIiOiJuYXZhdm5hMTEyYUBnbWFpbC5jb20gU0hPUFBFUiIsImV4cCI6MTczNDY3MDI0NSwiaWF0IjoxNzM0NjM0MjQ1fQ")
+		
+		
+		.when()
+		.get("/shoppers/191739")
+		.then()
+		.statusCode(200).extract().response();
+		System.out.println(res1.asPrettyString());
+		
+	}
+	@Test
+	public void patch() {
+		Response res = RestAssured.given().
+		baseUri("https://www.shoppersstack.com/shopping")
+		.body("{\r\n"
+				+ "  \"city\": \"Bangalore\",\r\n"
+				+ "  \"country\": \"India\",\r\n"
+				+ "  \"email\": \"navavna112a@gmail.com\",\r\n"
+				+ "  \"firstName\": \"indiaa\",\r\n"
+				+ "  \"gender\": \"MALE\",\r\n"
+				+ "  \"lastName\": \"pak\",\r\n"
+				+ "  \"password\": \"India@123\",\r\n"
+				+ "  \"phone\": 9123456780,\r\n"
+				+ "  \"state\": \"Karnataka\",\r\n"
+				+ "  \"zoneId\": \"ALPHA\"\r\n"
+				+ "}").contentType("application/json").auth().oauth2("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYXZhdm5hMTEyYUBnbWFpbC5jb20gU0hPUFBFUiIsImV4cCI6MTczNDY3MDQ4MSwiaWF0IjoxNzM0NjM0NDgxfQ.xNycZzb0RiFnb9rpHxga4J5Cg1MG2B1JB4QM3cmn43w")
+		
+		.when().patch("/shoppers/191739")
+		
+		
+		
+		.then().statusCode(200).extract().response();
+		System.out.println(res.asPrettyString());
+	}
+	@Test
+	public void forget() {
+		RestAssured.given().baseUri("https://www.shoppersstack.com/shopping")
+		.headers("email","navavna112a@gmail.com","role","SHOPPER").
+		when().post("/users/forgot-password").then().log().all();
+	}
+	@Test
+	public void verify() {
+		RestAssured.given().baseUri("https://www.shoppersstack.com/shopping").header("password","Appu@123").queryParam("token", "d6eXpfhdxJoh4dnas1iiSVXtLjx26e1Zz4N7QJjHfZ8ZI").when().post("/users/verify-account").then().log().all();
+	}
+
+}
